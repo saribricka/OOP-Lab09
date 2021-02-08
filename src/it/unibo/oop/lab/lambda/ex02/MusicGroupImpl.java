@@ -1,4 +1,4 @@
-package it.unibo.oop.lab.lambda.ex02;
+package lab09.it.unibo.oop.lab.lambda.ex02;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,22 +31,28 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> orderedSongNames() {
-        return null;
+        return this.songs.stream()
+                .map(s -> s.getSongName())
+                .sorted();
     }
 
     @Override
     public Stream<String> albumNames() {
-        return null;
+        return this.albums.keySet().stream();
     }
 
     @Override
     public Stream<String> albumInYear(final int year) {
-        return null;
+        return this.albums.keySet().stream()
+                .filter(a -> this.albums.get(a).equals(year));
     }
 
     @Override
     public int countSongs(final String albumName) {
-        return -1;
+        return (int) this.songs.stream()
+                .filter(a -> a.getAlbumName().isPresent())
+                .filter(a -> a.getAlbumName().equals(albumName))
+                .count();
     }
 
     @Override
@@ -61,7 +67,15 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Optional<String> longestSong() {
-        return null;
+        final Optional<Song> longest = this.songs.stream()
+                .max((song1, song2) -> Double.compare(song1.getDuration(), song2.getDuration()));
+//                .map(s -> s.getSongName());
+//        return Optional.ofNullable(longest.get().getSongName());
+        if (longest.isPresent()) {
+          return Optional.of(longest.get().getSongName());
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
